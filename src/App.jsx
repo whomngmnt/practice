@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import React, { useState } from 'react';
 import './App.scss';
-
 import usersFromServer from './api/users';
 import categoriesFromServer from './api/categories';
 import productsFromServer from './api/products';
@@ -27,17 +26,15 @@ export const App = () => {
   const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
 
   const visibleProducts = products
-  .filter(
-    product => selectedUserId === null || product.user.id === selectedUserId,
-  )
-  .filter(product => (
-    product.name.toLowerCase().includes(query.toLowerCase())
-  ))
-  .filter(
-    product =>
-      selectedCategoryIds.length === 0
-      || selectedCategoryIds.includes(product.category.id),
-  );
+    .filter(
+      product => selectedUserId === null || product.user.id === selectedUserId,
+    )
+    .filter(product => product.name.toLowerCase().includes(query.toLowerCase()))
+    .filter(
+      product =>
+        selectedCategoryIds.length === 0 ||
+        selectedCategoryIds.includes(product.category.id),
+    );
 
   const resetAllFilters = () => {
     setSelectedUserId(null);
@@ -45,19 +42,19 @@ export const App = () => {
     setSelectedCategoryIds([]);
   };
 
-const toggleCategory = categoryId => {
-  setSelectedCategoryIds(currentCategoryIds => {
+  const toggleCategory = categoryId => {
+    setSelectedCategoryIds(currentCategoryIds => {
       if (currentCategoryIds.includes(categoryId)) {
         return currentCategoryIds.filter(id => id !== categoryId);
       }
 
       return [...currentCategoryIds, categoryId];
     });
-};
+  };
 
-const clearAllCategories = () => {
-  setSelectedCategoryIds([]);
-};
+  const clearAllCategories = () => {
+    setSelectedCategoryIds([]);
+  };
 
   return (
     <div className="section">
@@ -131,8 +128,8 @@ const clearAllCategories = () => {
                 href="#/"
                 data-cy="AllCategories"
                 className={`button is-success mr-6 ${
-      selectedCategoryIds.length === 0 ? '' : 'is-outlined'
-                  }`}
+                  selectedCategoryIds.length === 0 ? '' : 'is-outlined'
+                }`}
                 onClick={event => {
                   event.preventDefault();
                   clearAllCategories();
@@ -147,9 +144,7 @@ const clearAllCategories = () => {
                   data-cy="Category"
                   href="#/"
                   className={`button mr-2 my-1 ${
-                    selectedCategoryIds.includes(category.id)
-                      ? 'is-info'
-                      : ''
+                    selectedCategoryIds.includes(category.id) ? 'is-info' : ''
                   }`}
                   onClick={event => {
                     event.preventDefault();
