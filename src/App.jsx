@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
-import React from 'react';
+import React, { useState } from 'react';
 import './App.scss';
 
 import usersFromServer from './api/users';
@@ -22,6 +22,13 @@ const products = productsFromServer.map(product => {
 });
 
 export const App = () => {
+
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  const visibleProducts = products.filter(product => (
+    selectedUserId === null || product.user.id === selectedUserId
+  ));
+
   return (
     <div className="section">
       <div className="container">
@@ -32,21 +39,32 @@ export const App = () => {
             <p className="panel-heading">Filters</p>
 
             <p className="panel-tabs has-text-weight-bold">
-              <a data-cy="FilterAllUsers" href="#/">
+              <a
+                data-cy="FilterAllUsers"
+                href="#/"
+                className={selectedUserId === null ? 'is-active' : ''}
+                onClick={(event) => {
+                  event.preventDefault();
+                  setSelectedUserId(null);
+                }}
+              >
                 All
               </a>
 
-              <a data-cy="FilterUser" href="#/">
-                User 1
-              </a>
-
-              <a data-cy="FilterUser" href="#/" className="is-active">
-                User 2
-              </a>
-
-              <a data-cy="FilterUser" href="#/">
-                User 3
-              </a>
+              {usersFromServer.map(user => (
+                <a
+                  key={user.id}
+                  data-cy="FilterUser"
+                  href="#/"
+                  className={selectedUserId === user.id ? 'is-active' : ''}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setSelectedUserId(user.id);
+                  }}
+                >
+                  {user.name}
+                </a>
+              ))}
             </p>
 
             <div className="panel-block">
@@ -177,7 +195,7 @@ export const App = () => {
             </thead>
 
             <tbody>
-              {products.map(product => (
+              {visibleProducts.map(product => (
                 <tr key={product.id} data-cy="Product">
                   <td className="has-text-weight-bold" data-cy="ProductId">
                     {product.id}
